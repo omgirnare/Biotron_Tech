@@ -126,6 +126,10 @@ export default function PatientDashboard() {
           )}
         </div>
       </div>
+
+      <div className="mt-4">
+        <Link to="/patient/profile" className="px-3 py-2 bg-blue-600 text-white rounded">View / Add Profile</Link>
+      </div>
     </div>
   );
 }

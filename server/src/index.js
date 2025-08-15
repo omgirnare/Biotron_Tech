@@ -9,7 +9,7 @@ import authRoutes from './routes/auth.js';
 import recordRoutes from './routes/records.js';
 import accessRoutes from './routes/access.js';
 import userRoutes from './routes/users.js';
-
+import patientsRouter from './routes/patients.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -25,7 +25,7 @@ app.use(config.uploadUrlPrefix, express.static(config.uploadDir));
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
-
+app.use('/api/patients', patientsRouter);
 app.use('/api/auth', authRoutes);
 app.use('/api/records', recordRoutes);
 app.use('/api/access', accessRoutes);

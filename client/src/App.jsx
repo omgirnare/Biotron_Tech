@@ -7,6 +7,8 @@ import AccessManagement from './pages/AccessManagement';
 import Home from './pages/Home';
 import Footer from './components/Footer';
 import { getUser, clearAuth } from './auth';
+import PatientProfileView from './pages/PatientProfileView.jsx';
+import PatientProfileEdit from './pages/PatientProfileEdit.jsx';
 
 function Navigation() {
   const user = getUser();
@@ -51,6 +53,8 @@ export default function App() {
         <Route path="/patient" element={<PatientDashboard />} />
         <Route path="/doctor" element={<DoctorDashboard />} />
         <Route path="/access" element={<AccessManagement />} />
+        <Route path="/patient/profile" element={<PatientProfileView />} />
+        <Route path="/patient/profile/edit" element={<PatientProfileEdit />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
       <Footer />
