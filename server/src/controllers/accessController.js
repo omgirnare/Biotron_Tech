@@ -35,4 +35,36 @@ export async function listMyPatients(req, res) {
   }
 }
 
+export async function getMyPermissions(req, res) {
+  try {
+    const permissions = await Access.find({ patientId: req.user.id }).populate('doctorId', 'name email').lean();
+    res.json(permissions.map((p) => ({
+      _id: p._id,
+      doctorId: p.doctorId._id,
+      doctorName: p.doctorId.name,
+      doctorEmail: p.doctorId.email,
+      grantedAt: p.grantedAt,
+      createdAt: p.createdAt
+    })));
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch permissions' });
+  }
+}
+
+export async function checkAccess(req, res) {
+  try {
+    const { patientId } = req.params;
+    if (!patientId) return res.status(400).json({ message: 'patientId required' });
+    
+    const access = await Access.findOne({ patientId, doctorId: req.user.id });
+    if (!access) {
+      return res.status(403).json({ message: 'Access denied', hasAccess: false });
+    }
+    
+    res.json({ hasAccess: true, access });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to check access' });
+  }
+}
+
 

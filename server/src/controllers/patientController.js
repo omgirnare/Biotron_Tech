@@ -1,6 +1,13 @@
 import PatientProfile from '../models/PatientProfile.js';
 import { Access } from '../models/Access.js';
 
+/**
+ * Helper: Check if a doctor has access to a patient's data
+ */
+async function checkDoctorAccess(doctorId, patientId) {
+  const access = await Access.findOne({ patientId, doctorId });
+  return !!access;
+}
 
 /**
  * Helper: pick only allowed fields and normalize simple types.
@@ -156,8 +163,8 @@ export const getProfileById = async (req, res) => {
     if (req.user.id !== id) {
       // If doctor, check Access
       if (req.user.role === 'doctor') {
-        const allowed = await Access.findOne({ patientId: id, doctorId: req.user.id });
-        if (!allowed) return res.status(403).json({ message: 'Access denied' });
+        const hasAccess = await checkDoctorAccess(req.user.id, id);
+        if (!hasAccess) return res.status(403).json({ message: 'Access denied' });
       } else if (req.user.role !== 'admin') {
         return res.status(403).json({ message: 'Access denied' });
       }

@@ -6,11 +6,20 @@ export default function PatientProfileView() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState('');
+  const [permissions, setPermissions] = useState([]);
 
   useEffect(() => {
     let mounted = true;
-    api.get('/patients/me')
-      .then(r => { if (mounted) setProfile(r.data); })
+    Promise.all([
+      api.get('/patients/me'),
+      api.get('/access/my-permissions')
+    ])
+      .then(([profileRes, permissionsRes]) => { 
+        if (mounted) {
+          setProfile(profileRes.data);
+          setPermissions(permissionsRes.data);
+        }
+      })
       .catch(e => { if (mounted) setErr(e?.response?.data?.message || 'No profile'); })
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; };
@@ -70,7 +79,29 @@ export default function PatientProfileView() {
             <div><strong>Record Created:</strong> {profile.createdAt ? new Date(profile.createdAt).toLocaleString() : '—'}</div>
           </div>
 
-          <Link to="/patient/profile/edit" className="px-4 py-2 bg-yellow-500 text-white rounded">Edit</Link>
+          <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <h3 className="font-medium text-blue-800 mb-2">Access Permissions</h3>
+            {permissions.length === 0 ? (
+              <p className="text-sm text-blue-600">No doctors currently have access to your profile.</p>
+            ) : (
+              <div className="space-y-2">
+                <p className="text-sm text-blue-600">The following doctors can view your profile:</p>
+                {permissions.map((permission) => (
+                  <div key={permission._id} className="text-sm text-blue-700">
+                    • {permission.doctorName} ({permission.doctorEmail}) - Granted: {new Date(permission.grantedAt).toLocaleDateString()}
+                  </div>
+                ))}
+                <p className="text-xs text-blue-500 mt-2">
+                  You can manage these permissions in the <Link to="/access" className="underline">Access Management</Link> section.
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div className="mt-4 flex gap-2">
+            <Link to="/patient/profile/edit" className="px-4 py-2 bg-yellow-500 text-white rounded">Edit</Link>
+            <Link to="/access" className="px-4 py-2 bg-blue-600 text-white rounded">Manage Access</Link>
+          </div>
         </>
       )}
 
