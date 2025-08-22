@@ -13,7 +13,7 @@ if (!fs.existsSync(ABS_UPLOAD_DIR)) {
 }
 
 export const config = {
-  mongoUri: process.env.MONGO_URI || 'mongodb://localhost:27017/med_records',
+  mongoUri: process.env.MONGO_URI || 'mongodb+srv://bhumikrane05:ZxhhXmDqtyX0w65D@cluster0.d69s7dl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
   jwtSecret: process.env.JWT_SECRET || 'supersecretjwtkey',
   port: Number(process.env.PORT || 5000),
   uploadDir: ABS_UPLOAD_DIR,

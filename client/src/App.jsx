@@ -86,13 +86,13 @@ function Navigation() {
             <Link to="/" className="font-semibold text-slate-800 hover:text-slate-900 transition"><img src="../public/biotron.png" alt="Company Logo" className="w-32 h-32" /></Link>
             <div className="ml-auto flex items-center gap-3">
               {/* Debug button - remove in production */}
-              <button
+              {/* <button
                 onClick={handleRefreshAuth}
                 className="px-2 py-1 text-xs bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
                 title="Debug: Refresh auth state"
               >
                 🔄
-              </button>
+              </button> */}
               
               {user ? (
             <>

@@ -15,7 +15,7 @@ async function checkDoctorAccess(doctorId, patientId) {
 function sanitizePayload(input = {}) {
   const allowed = [
     // Demographics / Administrative
-    'fullName', 'gender', 'dateOfBirth', 'age', 'bmi', 'bloodGroup', 'maritalStatus',
+    'fullName', 'gender', 'dateOfBirth', 'age', 'ethnicity', 'bmi', 'bloodGroup', 'maritalStatus',
     'contactNumber', 'email',
     'address', 'emergencyContact',
     // Insurance / assignment
@@ -25,8 +25,27 @@ function sanitizePayload(input = {}) {
     'chronicDiseases', 'familyHistory', 'immunizations', 'ongoingTreatments',
     // Lifestyle
     'smokingStatus', 'alcoholConsumption', 'exerciseLevel', 'dietPreferences',
-    // Vitals
-    'heightCm', 'weightKg', 'bloodPressure', 'heartRate', 'bloodSugar',
+    // Demographics & Physical
+    'heightCm', 'weightKg', 'bodySurfaceArea',
+    // Vital Signs
+    'bloodPressure', 'heartRate', 'respiratoryRate', 'oxygenSaturation', 'temperature',
+    // General Physical Exam
+    'skin', 'capillaryRefillTime', 'edema', 'hydrationStatus', 'orientation', 'gait', 'muscleTone',
+    // Cardiovascular
+    'heartSounds', 'murmurs', 'jugularVenousPressure', 'peripheralPulses',
+    // Respiratory
+    'breathSounds', 'chestExpansion', 'accessoryMuscleUse',
+    // Gastrointestinal
+    'abdomenPalpation', 'bowelSounds', 'hepatosplenomegaly', 'abdominalMass',
+    // Neurological
+    'cranialNerves', 'reflexes', 'sensation', 'motorStrength', 'coordination', 'speech',
+    // Musculoskeletal
+    'rangeOfMotion', 'deformities', 'tenderness', 'spineAlignment',
+    // Laboratory Values
+    'hemoglobin', 'wbcCount', 'plateletCount', 'fastingBloodGlucose', 'serumCreatinine',
+    'bloodUreaNitrogen', 'serumSodium', 'serumPotassium',
+    // Legacy fields
+    'bloodSugar',
   ];
 
   const arrFields = new Set([
@@ -86,7 +105,10 @@ function sanitizePayload(input = {}) {
       }
 
       // numeric normalization
-      if (['heightCm', 'weightKg', 'heartRate', 'bloodSugar', 'bmi', 'age'].includes(key)) {
+      if (['heightCm', 'weightKg', 'bodySurfaceArea', 'heartRate', 'respiratoryRate', 'oxygenSaturation', 
+           'temperature', 'capillaryRefillTime', 'motorStrength', 'hemoglobin', 'wbcCount', 'plateletCount', 
+           'fastingBloodGlucose', 'serumCreatinine', 'bloodUreaNitrogen', 'serumSodium', 'serumPotassium', 
+           'bmi', 'age', 'bloodSugar'].includes(key)) {
         out[key] = v == null || v === '' ? null : Number(v);
         continue;
       }
